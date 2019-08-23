@@ -46,7 +46,7 @@ library(dplyr)
 out <- lapply(readLines("reviews_Pop.json"), fromJSON)
 
 library(data.table)
-outdf <- rbindlist(out, fill=TRUE) %>% unique()
+outdf <- rbindlist(out, use.names=T,fill=TRUE) %>% unique()
 
 outdf %>% 
   group_by(overall) %>% 
