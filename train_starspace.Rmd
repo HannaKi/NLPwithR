@@ -27,6 +27,10 @@ model <- embed_tagspace(x = dekamer$x, y = dekamer$y,
                         similarity = "cosine", negSearchLimit = 50,
                         ngrams = 2, minCount = 2)
 plot(model)                        
+
+```
+Try trained model
+```{r message=FALSE, warning=FALSE}
             
 text <- c("de nmbs heeft het treinaanbod uitgebreid via onteigening ...",
           "de migranten komen naar europa de asielcentra ...")                   
@@ -34,7 +38,6 @@ predict(model, text, k = 3)
 predict(model, "koning filip", k = 10, type = "knn")
 predict(model, "koning filip", k = 10, type = "embedding")
 ```
-
 
 
 # Data
