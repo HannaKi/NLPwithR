@@ -6,44 +6,121 @@
 #
 #    http://shiny.rstudio.com/
 #
-
 library(shiny)
+library(shinyWidgets)
+library(shinycssloaders)
+library(DT)
 
+# Objects in this file are shared across all sessions in the same R process
+#source('all_sessions.R', local = TRUE)
+options(shiny.sanitize.errors = TRUE)
+
+###################
 # Define UI for application that draws a histogram
-ui <- fluidPage(
-
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
-    )
-)
-
+ui <- tagList(
+    includeCSS("styles.css"),
+    tags$style(type="text/css",
+               ".shiny-output-error { visibility: hidden; }",
+               ".shiny-output-error:before { visibility: hidden; }"), 
+    navbarPage(
+        "Deploy demo", 
+        
+    ################### TAB amazon   ################### 
+        tabPanel(title = "Amazon reviews (EN)",
+                 #setBackgroundImage(src="logo-white@2000x1910.png"),
+                 h2("Review predictor demo"),
+                 # input field
+                 p("Give a review:"),
+                 textAreaInput("user_text_en", label = NULL, 
+                               placeholder = "Please enter some text.",width = "800px"
+                 ),
+                 
+                 # display text output
+                 hr(),
+                 h4("Inputted description"),
+                 textOutput("text_en"),
+                 tags$head(tags$style("#text1{font-style: italic;
+                                  }"
+                 )
+                 )
+                 ,
+                 # change style:    
+                 #,tags$head(tags$style("#view table {background-color: white; }", media="screen", type="text/css"))
+                 hr(),
+                 h4("Model output for reviews and their similarities"),
+                 
+                 tableOutput("view_table_en") %>% withSpinner(color="#0dc5c1")
+                 
+        )#end of tabPanel
+    ,
+    
+    tabPanel(title = "Ruimtehol example (NL)",
+             #setBackgroundImage(src="logo-white@2000x1910.png"),
+             h2("Ruimetehol predictor demo"),
+             # input field
+             p("Write some dutch text"),
+             textAreaInput("user_text_nl", label = NULL, 
+                           placeholder = "Please enter some text.",width = "800px"
+             ),
+             
+             # display text output
+             hr(),
+             h4("Inputted description"),
+             textOutput("text_nl"),
+             tags$head(tags$style("#text1{font-style: italic;
+                                  }"
+             )
+             )
+             ,
+             # change style:    
+             #,tags$head(tags$style("#view table {background-color: white; }", media="screen", type="text/css"))
+             hr(),
+             h4("Model output for topics and their similarities"),
+             
+             tableOutput("view_table_nl") %>% withSpinner(color="#0dc5c1")
+             
+    ) #end of tabPanel
+        
+    ) # end of navbar page
+) ##end of ui
+    
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white')
-    })
-}
-
+        
+        # text output for the first page
+        output$text_en <- renderText({
+            input$user_text_en
+        })
+        
+        
+        ##amazon reviews
+        
+        output$view_table_en <- renderTable({
+            make_prediction_en(input$user_text_en) %>%
+                gather(., "rikosnimike", "similarity", -doc_id, -text) %>% 
+                arrange(desc(similarity)) %>% 
+                select(`Crime label prediction`=rikosnimike, similarity) %>% 
+                top_n(5)
+        },hover=TRUE)
+        
+        
+        # text output for the first page
+        output$text_nl <- renderText({
+            input$user_text_nl
+        })
+        
+        
+        ##ruimtehol example
+        
+        output$view_table_nl <- renderTable({
+            make_prediction_nl(input$user_text_nl) %>%
+                gather(., "rikosnimike", "similarity", -doc_id, -text) %>% 
+                arrange(desc(similarity)) %>% 
+                select(`Crime label prediction`=rikosnimike, similarity) %>% 
+                top_n(5)
+        },hover=TRUE)
+    }
+    
 # Run the application 
 shinyApp(ui = ui, server = server)
+    

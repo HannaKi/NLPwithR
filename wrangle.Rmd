@@ -6,4 +6,272 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+## Let's start with the basics
+
+One of the best libraries for text mining is [`tidytext`]([)https://www.tidytextmining.com/)
+```{r message=FALSE, warning=FALSE}
+library(tidytext)
+library(janeaustenr)
+library(dplyr)
+library(stringr)
+
+original_books <- austen_books() 
+
+original_books  
+```
+
+Adding linenumbers and chapters
+```{r message=FALSE, warning=FALSE}
+original_books <- original_books %>%   
+  group_by(book) %>%
+  mutate(linenumber = row_number(),
+         chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]",
+                                                 ignore_case = TRUE)))) %>%
+  ungroup()
+
+original_books
+
+```
+Getting words out of the sentences
+```{r message=FALSE, warning=FALSE}
+
+tidy_books <- original_books %>%
+  unnest_tokens(word, text)
+
+tidy_books
+
+```
+Counting words
+```{r message=FALSE, warning=FALSE}
+
+tidy_books %>%
+  count(word, sort = TRUE) 
+```
+
+### Removing stopwords
+```{r message=FALSE, warning=FALSE}
+
+data(stop_words)
+
+tidy_books <- tidy_books %>%
+  anti_join(stop_words)
+
+tidy_books %>%
+  count(word, sort = TRUE) %>% head(10)
+```
+
+If you want stopwords eg. in Finnihs, you have to collect fetch them somewhere or collect them yourself.
+```{r message=FALSE, warning=FALSE}
+
+library(jsonlite)
+
+stopwords_fin <- fromJSON('https://raw.githubusercontent.com/stopwords-iso/stopwords-fi/master/stopwords-fi.json')
+
+##make a df
+stopwords_fin <- stopwords_fin %>% 
+  as.data.frame()
+
+stopwords_fin %>% head()
+
+names(stopwords_fin)[1]<-"word"
+  
+```
+
+## Stemming words
+```{r message=FALSE, warning=FALSE}
+
+library(SnowballC)
+library(corpus)
+
+tidy_books_stemmed <- tidy_books %>%
+  mutate(word_stemmed1 = corpus::stem_snowball(word, algorithm = "en"),
+         word_stemmed2 = SnowballC::wordStem(word, language = "en"))
+
+tidy_books_stemmed
+
+```
+
+
+### Stemming in Finnish 
+Ain't that easy..
+
+Let' get some data from twitter. For this you need API keys, only available nowadays upon request. Try your luck! Tutorial [here](https://towardsdatascience.com/access-data-from-twitter-api-using-r-and-or-python-b8ac342d3efe)
+
+I save my credentials nowadays in .Renviron file and add that file also to .gitignore in order to avoid pushing some secrect stuff in a repo. More on that eg. [here](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron).
+```{r message=FALSE, warning=FALSE}
+
+readRenviron('.Renviron') 
+library(twitteR)
+setup_twitter_oauth(Sys.getenv("consumer_key"), Sys.getenv("consumer_secret"), Sys.getenv("access_token"), Sys.getenv("access_secret"))
+
+### Search some tweets ##
+tweets= searchTwitter('naiset', n = 1000, lang = "fi")
+# store the tweets into dataframe
+tweets_df = twListToDF(tweets)
+
+
+prep_fun = function(x) {
+  x %>% 
+    # make text lower case
+    str_to_lower %>% 
+    # remove non-alphanumeric symbols
+    str_replace_all("[^[:alpha:]]", " ") %>% 
+    # collapse multiple spaces
+    str_replace_all("\\s+", " ")
+  
+}
+
+#classifythis$kerro_mod = prep_fun(classifythis$`Kerro tähän mahdollisimman tarkasti tilanteesta`)
+tweets_df$text = prep_fun(tweets_df$text)
+
+##tidy format
+tidy_tweets <- tweets_df %>%
+  unnest_tokens(word, text)
+
+##filter out stopwords
+tidy_tweets <- tidy_tweets %>%
+  anti_join(stopwords_fin)
+
+
+tidy_tweets %>%
+  count(word, sort = TRUE) 
+
+```
+And filter out more 
+```{r message=FALSE, warning=FALSE}
+
+
+# tobefiltered <- tidy_tweets %>%
+#   count(word, sort = TRUE) %>% 
+#   top_n(50) %>% 
+#   select(word) %>% unlist
+
+tobefiltered <- c("naiset","https","t.co","rt","t","co","e","n")
+
+tidy_tweets <- tidy_tweets %>%
+  filter(!word %in% tobefiltered)
+
+```
+
+#### Actually stemming in Finnish
+```{r message=FALSE, warning=FALSE}
+
+
+tidy_tweets_count <- tidy_tweets %>%
+  count(word, sort = TRUE) 
+
+tidy_tweets_stemmed <- 
+  tidy_tweets_count %>% 
+  mutate(word_stemmed1 = corpus::stem_snowball(word, algorithm = "fi"),
+         word_stemmed2 = SnowballC::wordStem(word, language = "fi"))
+
+tidy_tweets_stemmed
+
+```
+And way better package is UDPIPE. Also little bit different take on the process
+
+```{r}
+library(udpipe)
+
+ud_model <- udpipe_download_model(language = "finnish")
+ud_model <- udpipe_load_model(ud_model$file_model)
+
+x <- udpipe_annotate(ud_model, x = tweets_df$text, doc_id = tweets_df$id)
+classifythis_lemma <- as.data.frame(x)
+
+## Define the identifier at which we will build a topic model
+classifythis_lemma$topic_level_id <- unique_identifier(classifythis_lemma, fields = c("doc_id", "paragraph_id", "sentence_id"))
+
+classifythis_lemma %>% head(10)
+
+```
+```{r message=FALSE, warning=FALSE}
+
+## Get a data.frame with 1 row per id/lemma
+dtf <- subset(classifythis_lemma, upos %in% c("NOUN", "VERB", "ADJ"))
+dtf <- document_term_frequencies(dtf, document = "topic_level_id", term = "lemma")
+head(dtf)
+
+mostusedwords <- classifythis_lemma %>% filter(upos %in% c("VERB", "ADJ")) %>% #c("NOUN", "VERB", "ADJ")
+  group_by(lemma) %>% 
+  summarise(n=n()) %>% 
+  arrange(desc(n)) %>% 
+  top_n(10)
+
+mostusedwords
+```
+
+## Wordclouds and other visualisation
+
+### Wordclouds
+```{r message=FALSE, warning=FALSE}
+library(wordcloud)
+library(reshape2)
+library(ggplot2)
+
+bing <- get_sentiments("bing")
+
+words_open <- tidy_books %>% 
+  anti_join(get_stopwords())%>% 
+  left_join(get_sentiments("bing")) %>% 
+  count(word, sentiment, sort = TRUE) %>% 
+  filter(!is.na(word))
+
+set.seed(1234)
+# define a nice color palette
+pal <- brewer.pal(8,"Dark2")
+
+# plot the 50 most common words
+words_open %>% 
+  with(wordcloud(word, n, random.order = FALSE, max.words = 500, 
+                 min.freq = 1,
+                 rot.per=0.35, 
+                 colors=pal))
+
+words_open %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = pal,
+                   max.words = 200, 
+                   title.colors=pal,
+                   title.size=1,
+                   title.bg.colors=c("#d8d8d8")) +theme(
+    text = element_text(family = "Roboto", size = 18))
+```
+
+
+### Other visualisations
+Again from tidytext book. Take a look!
+```{r}
+
+book_words <- austen_books() %>%
+  unnest_tokens(word, text) %>%
+  count(book, word, sort = TRUE)
+
+total_words <- book_words %>% 
+  group_by(book) %>% 
+  summarize(total = sum(n))
+
+book_words <- left_join(book_words, total_words)
+
+book_words
+
+
+```
+```{r}
+
+book_words <- book_words %>%
+  bind_tf_idf(word, book, n)
+
+book_words %>%
+  arrange(desc(tf_idf)) %>%
+  mutate(word = factor(word, levels = rev(unique(word)))) %>% 
+  group_by(book) %>% 
+  top_n(15) %>% 
+  ungroup() %>%
+  ggplot(aes(word, tf_idf, fill = book)) +
+  geom_col(show.legend = FALSE) +
+  labs(x = NULL, y = "tf-idf") +
+  facet_wrap(~book, ncol = 2, scales = "free") +
+  coord_flip()
+```
 

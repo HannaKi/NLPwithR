@@ -1,0 +1,38 @@
+@import url("//fonts.googleapis.com/css?family=Montserrat:300,400");
+
+h1,h2,h3 {
+  font-family: 'Montserrat', bold;
+  line-height: 1.1;
+  color: #00bbd4;
+}
+
+h4 {
+  font-family: 'Montserrat', bold;
+  line-height: 1.1;
+  color: #d8d8d8;
+}
+
+body {
+  font-family: 'Montserrat';
+  background-color: #f5f5f5;
+}
+
+div {
+  padding-top: 3px;
+  padding-bottom: 10px;
+}
+
+.container {
+  background-repeat: no-repeat;
+  padding: 10px;
+}
+
+img {
+  opacity: 0.2;
+  filter: alpha(opacity=20); /* For IE8 and earlier */
+}
+
+background {
+  opacity: 0.2;
+  filter: alpha(opacity=20); /* For IE8 and earlier */
+}
