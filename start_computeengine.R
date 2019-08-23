@@ -1,6 +1,7 @@
 #https://cloudyr.github.io/googleComputeEngineR/index.html
+
+readRenviron('.Renviron') 
 library(googleComputeEngineR)
-#readRenviron('.Renviron') 
 
 vm_nlp <- gce_vm("virtualmachine", 
                   predefined_type = "n1-standard-1", 

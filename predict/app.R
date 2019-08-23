@@ -25,7 +25,7 @@ ui <- tagList(
     navbarPage(
         "Deploy demo", 
         
-    ################### TAB amazon   ################### 
+        ################### TAB amazon   ################### 
         tabPanel(title = "Amazon reviews (EN)",
                  #setBackgroundImage(src="logo-white@2000x1910.png"),
                  h2("Review predictor demo"),
@@ -52,75 +52,68 @@ ui <- tagList(
                  tableOutput("view_table_en") %>% withSpinner(color="#0dc5c1")
                  
         )#end of tabPanel
-    ,
-    
-    tabPanel(title = "Ruimtehol example (NL)",
-             #setBackgroundImage(src="logo-white@2000x1910.png"),
-             h2("Ruimetehol predictor demo"),
-             # input field
-             p("Write some dutch text"),
-             textAreaInput("user_text_nl", label = NULL, 
-                           placeholder = "Please enter some text.",width = "800px"
-             ),
-             
-             # display text output
-             hr(),
-             h4("Inputted description"),
-             textOutput("text_nl"),
-             tags$head(tags$style("#text1{font-style: italic;
+        ,
+        
+        tabPanel(title = "Ruimtehol example (NL)",
+                 #setBackgroundImage(src="logo-white@2000x1910.png"),
+                 h2("Ruimetehol predictor demo"),
+                 # input field
+                 p("Write some dutch text"),
+                 textAreaInput("user_text_nl", label = NULL, 
+                               placeholder = "Please enter some text.",width = "800px"
+                 ),
+                 
+                 # display text output
+                 hr(),
+                 h4("Inputted description"),
+                 textOutput("text_nl"),
+                 tags$head(tags$style("#text1{font-style: italic;
                                   }"
-             )
-             )
-             ,
-             # change style:    
-             #,tags$head(tags$style("#view table {background-color: white; }", media="screen", type="text/css"))
-             hr(),
-             h4("Model output for topics and their similarities"),
-             
-             tableOutput("view_table_nl") %>% withSpinner(color="#0dc5c1")
-             
-    ) #end of tabPanel
+                 )
+                 )
+                 ,
+                 # change style:    
+                 #,tags$head(tags$style("#view table {background-color: white; }", media="screen", type="text/css"))
+                 hr(),
+                 h4("Model output for topics and their similarities"),
+                 
+                 tableOutput("view_table_nl") %>% withSpinner(color="#0dc5c1")
+                 
+        ) #end of tabPanel
         
     ) # end of navbar page
 ) ##end of ui
-    
+
 # Define server logic required to draw a histogram
 server <- function(input, output) {
-        
-        # text output for the first page
-        output$text_en <- renderText({
-            input$user_text_en
-        })
-        
-        
-        ##amazon reviews
-        
-        output$view_table_en <- renderTable({
-            make_prediction_en(input$user_text_en) %>%
-                gather(., "rikosnimike", "similarity", -doc_id, -text) %>% 
-                arrange(desc(similarity)) %>% 
-                select(`Crime label prediction`=rikosnimike, similarity) %>% 
-                top_n(5)
-        },hover=TRUE)
-        
-        
-        # text output for the first page
-        output$text_nl <- renderText({
-            input$user_text_nl
-        })
-        
-        
-        ##ruimtehol example
-        
-        output$view_table_nl <- renderTable({
-            make_prediction_nl(input$user_text_nl) %>%
-                gather(., "rikosnimike", "similarity", -doc_id, -text) %>% 
-                arrange(desc(similarity)) %>% 
-                select(`Crime label prediction`=rikosnimike, similarity) %>% 
-                top_n(5)
-        },hover=TRUE)
-    }
     
+    # text output for the first page
+    output$text_en <- renderText({
+        input$user_text_en
+    })
+    
+    
+    ##amazon reviews
+    
+    output$view_table_en <- renderTable({
+        make_prediction_en(input$user_text_en) %>%
+            top_n(5)
+    },hover=TRUE)
+    
+    
+    # text output for the first page
+    output$text_nl <- renderText({
+        input$user_text_nl
+    })
+    
+    
+    ##ruimtehol example
+    
+    output$view_table_nl <- renderTable({
+        make_prediction_nl(input$user_text_nl) %>%
+            top_n(5)
+    },hover=TRUE)
+}
+
 # Run the application 
 shinyApp(ui = ui, server = server)
-    

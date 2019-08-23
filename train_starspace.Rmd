@@ -28,6 +28,8 @@ model <- embed_tagspace(x = dekamer$x, y = dekamer$y,
                         ngrams = 2, minCount = 2)
 plot(model)                        
 
+
+starspace_save_model(model)
 ```
 Try trained model
 ```{r message=FALSE, warning=FALSE}
@@ -60,7 +62,7 @@ outdf %>%
 #Let's add categories
 outdfsample <- outdf %>% 
   mutate(pos_neg = if_else(overall>3, 'GOOD', 'BAD')) %>% 
-  sample_frac(0.01)
+  sample_frac(0.1)
 
 ## Split data
 ## 75% of the sample size
@@ -88,10 +90,12 @@ system.time({
                           dim = 50,
                           lr = 0.01, epoch = 40, loss = "softmax", adagrad = TRUE,
                           similarity = "cosine", negSearchLimit = 50,
-                          ngrams = 2, minCount = 2))
+                          ngrams = 2, minCount = 2)
 })
 
-plot(model)
+plot(model_en)
+
+starspace_save_model(model_en, file = "en_textspace.ruimtehol")
 ```
 
 
@@ -103,7 +107,7 @@ make_prediction_en <- function(x) {
   return(prediction)}
 
 make_prediction_nl <- function(x) {
-  prediction <- predict(model, x, type = "labels")
+  prediction <- predict(model, x,  k = 3)
   return(prediction)}
 
 ```
@@ -111,6 +115,14 @@ make_prediction_nl <- function(x) {
 ### Test peformance
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 
-make_prediction_en(test$reviewText)
+predictions_en <- make_prediction_en(test$reviewText)
+
+rownames(test)=NULL
+
+test %>% add_rownames() %>% mutate(rowname=as.numeric(rowname)) %>% 
+  left_join(., predictions_en, by=c("rowname"="doc_id"))
+
+
+make_prediction_nl(test$reviewText)
 
 ```
