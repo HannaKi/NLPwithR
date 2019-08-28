@@ -9,8 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Example of ruimtehol
 
-Wonderful [ruimtehol](https://github.com/bnosac/ruimtehol) package build on top of Facebook research [Starspace])(https://github.com/facebookresearch/StarSpace). R packge was there before python ;)
+Wonderful [ruimtehol](https://github.com/bnosac/ruimtehol) package build on top of Facebook research [Starspace](https://github.com/facebookresearch/StarSpace). R packge was there before python ;)
 
+Warning, this might take time, suggesting using VM. Here's example straight out from the package. 
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 library(ruimtehol)
 data("dekamer", package = "ruimtehol")
@@ -42,12 +43,11 @@ predict(model, "koning filip", k = 10, type = "embedding")
 ```
 
 
-# Data
-Data for text classification taska are out there but not in very interesting topics. Stanford Uni has collected some [Amazon reviews](http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/)
-```{r message=FALSE, warning=FALSE}
+# Some other data
+Data for text classification tasks are out there but not about very interesting topics. Stanford Uni has collected some [Amazon reviews](http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/). 
+```{r eval=FALSE, include=FALSE}
 library(jsonlite)
 library(dplyr)
-
 out <- lapply(readLines("reviews_Pop.json"), fromJSON)
 
 library(data.table)
@@ -56,9 +56,10 @@ outdf <- rbindlist(out, use.names=T,fill=TRUE) %>% unique()
 outdf %>% 
   group_by(overall) %>% 
   summarise(n=n())
+
 ```
 
-```{r message=FALSE, warning=FALSE}
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
 #Let's add categories
 outdfsample <- outdf %>% 
   mutate(pos_neg = if_else(overall>3, 'GOOD', 'BAD')) %>% 
@@ -76,12 +77,65 @@ train <- outdfsample[train_ind, ]
 test <- outdfsample[-train_ind, ]
 
 ```
-## Training the model
+
+
+For the multiclassification problem I selected a Kaggle competition [data](https://www.kaggle.com/jhoward/nb-svm-strong-linear-baseline/data), from Comment Classification Challenge. 
+```{r message=FALSE, warning=FALSE}
+library(readr)
+train <- read_csv("train.csv")
+
+train %>% head()
+
+```
+Let's modify a bit for the StarSpace/ruimtehol required format
+```{r}
+#collapse labels to one column and select only the ones that have at least one label
+train_mod <- train %>%
+  gather(Variable, Value, -id, -comment_text, na.rm = TRUE) %>%
+  filter(!Value %in% 0) %>%
+  group_by(id,comment_text) %>%
+  summarise(labels = toString(Variable))
+
+#StarSpace format
+train_mod$x <- strsplit(train_mod$comment_text, "\\W")
+train_mod$x <- sapply(train_mod$x, FUN = function(x) paste(setdiff(x, ""), collapse = " "))
+train_mod$x <- tolower(train_mod$x)
+train_mod$y <- strsplit(train_mod$labels, split = ",")
+train_mod$y <- lapply(train_mod$y, FUN=function(x) gsub(" ", "", x))
+
+#train_mod %>% select(x,y) %>% head(10)
+```
+
+
+
+
+
+## Training the models
 Let's train our own
 ```{r eval=FALSE, message=FALSE, warning=FALSE, include=TRUE}
 library(ruimtehol)
 
-## TRAIN MODEL
+## TRAIN MODEL for reviews
+set.seed(1234)
+system.time({
+  
+  model_toxic <- embed_tagspace(x = train_mod$x, y = train_$y,
+                          early_stopping = 0.8, validationPatience = 10,
+                          dim = 50,
+                          lr = 0.01, epoch = 40, loss = "softmax", adagrad = TRUE,
+                          similarity = "cosine", negSearchLimit = 50,
+                          ngrams = 2, minCount = 2)
+})
+
+plot(model_toxic)
+
+starspace_save_model(model_en, file = "toxic_textspace.ruimtehol")
+```
+
+```{r eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+library(ruimtehol)
+
+## TRAIN MODEL for reviews
 set.seed(1234)
 system.time({
   
@@ -102,9 +156,13 @@ starspace_save_model(model_en, file = "en_textspace.ruimtehol")
 ### Write functions
 ```{r}
 
-make_prediction_en <- function(x) {
-  prediction <- predict(model_en, x, type = "labels")
+make_prediction_toxic<- function(x) {
+  prediction <- predict(model_toxic, x, type = "labels")
   return(prediction)}
+
+# make_prediction_en <- function(x) {
+#   prediction <- predict(model_en, x, type = "labels")
+#   return(prediction)}
 
 make_prediction_nl <- function(x) {
   prediction <- predict(model, x,  k = 3)
