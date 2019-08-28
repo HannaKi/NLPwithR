@@ -4,7 +4,7 @@ Basic text wrangling
 ## Let’s start with the basics
 
 One of the best libraries for text mining is
-[`tidytext`](%5B)<https://www.tidytextmining.com/>)
+[`tidytext`](https://www.tidytextmining.com/)
 
 ``` r
 library(tidytext)
@@ -242,20 +242,20 @@ tidy_tweets %>%
   count(word, sort = TRUE) 
 ```
 
-    ## # A tibble: 4,935 x 2
+    ## # A tibble: 4,898 x 2
     ##    word        n
     ##    <chr>   <int>
-    ##  1 naiset    658
-    ##  2 t         617
-    ##  3 https     613
-    ##  4 co        603
-    ##  5 rt        367
-    ##  6 miehet     71
-    ##  7 n          69
-    ##  8 e          49
-    ##  9 naisten    49
-    ## 10 lapset     46
-    ## # … with 4,925 more rows
+    ##  1 naiset    679
+    ##  2 t         580
+    ##  3 https     575
+    ##  4 co        557
+    ##  5 rt        358
+    ##  6 suomen     86
+    ##  7 miehet     81
+    ##  8 saa        77
+    ##  9 p          51
+    ## 10 naisten    47
+    ## # … with 4,888 more rows
 
 And filter out more
 
@@ -285,20 +285,20 @@ tidy_tweets_stemmed <-
 tidy_tweets_stemmed
 ```
 
-    ## # A tibble: 4,928 x 4
-    ##    word              n word_stemmed1 word_stemmed2
-    ##    <chr>         <int> <chr>         <chr>        
-    ##  1 miehet           71 miehe         miehe        
-    ##  2 naisten          49 naist         naist        
-    ##  3 lapset           46 laps          laps         
-    ##  4 hommamedia       40 hommamed      hommamed     
-    ##  5 osa              39 osa           osa          
-    ##  6 tekivät          38 tekiv         tekiv        
-    ##  7 isis             37 isis          isis         
-    ##  8 suomen           36 suome         suome        
-    ##  9 m                34 m             m            
-    ## 10 mariapetterss    33 mariapetters  mariapetters 
-    ## # … with 4,918 more rows
+    ## # A tibble: 4,891 x 4
+    ##    word             n word_stemmed1 word_stemmed2
+    ##    <chr>        <int> <chr>         <chr>        
+    ##  1 suomen          86 suome         suome        
+    ##  2 miehet          81 miehe         miehe        
+    ##  3 saa             77 saa           saa          
+    ##  4 p               51 p             p            
+    ##  5 naisten         47 naist         naist        
+    ##  6 lapset          35 laps          laps         
+    ##  7 juho            34 juho          juho         
+    ##  8 koomikkokivi    33 koomikkokiv   koomikkokiv  
+    ##  9 em              32 em            em           
+    ## 10 päällä          32 pääl          pääl         
+    ## # … with 4,881 more rows
 
 And way better package is UDPIPE. Also little bit different take on the
 process
@@ -326,60 +326,60 @@ classifythis_lemma %>% head(10)
 ```
 
     ##                 doc_id paragraph_id sentence_id
-    ## 1  1164888274097332225            1           1
-    ## 2  1164888274097332225            1           1
-    ## 3  1164888274097332225            1           1
-    ## 4  1164888274097332225            1           1
-    ## 5  1164888274097332225            1           1
-    ## 6  1164888274097332225            1           1
-    ## 7  1164888274097332225            1           1
-    ## 8  1164888274097332225            1           1
-    ## 9  1164888274097332225            1           1
-    ## 10 1164888274097332225            1           1
-    ##                                                                                                                     sentence
-    ## 1  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 2  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 3  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 4  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 5  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 6  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 7  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 8  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 9  rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ## 10 rt kamybotti äärioikeistolaiset naiset eivät ole penaalin terävämpiä kyniä tai sitten ovat masokisteja https t co bfrejqh
-    ##    token_id              token              lemma  upos xpos
-    ## 1         1                 rt                 ri  NOUN    N
-    ## 2         2          kamybotti         kamybottaa  VERB    V
-    ## 3         3 äärioikeistolaiset äärioikeistolainen  NOUN    N
-    ## 4         4             naiset             nainen  NOUN    N
-    ## 5         5              eivät                 ei   AUX    V
-    ## 6         6                ole               olla   AUX    V
-    ## 7         7           penaalin            penaali  NOUN    N
-    ## 8         8         terävämpiä         terävämpiä  NOUN    N
-    ## 9         9              kyniä               kyni  NOUN    N
-    ## 10       10                tai                tai CCONJ    C
+    ## 1  1166691681367990272            1           1
+    ## 2  1166691681367990272            1           1
+    ## 3  1166691681367990272            1           1
+    ## 4  1166691681367990272            1           1
+    ## 5  1166691681367990272            1           1
+    ## 6  1166691681367990272            1           1
+    ## 7  1166691681367990272            1           1
+    ## 8  1166691681367990272            1           1
+    ## 9  1166691681367990272            1           1
+    ## 10 1166691681367990272            1           1
+    ##                                                                                                                              sentence
+    ## 1  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 2  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 3  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 4  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 5  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 6  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 7  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 8  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 9  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ## 10 rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
+    ##    token_id          token          lemma  upos xpos
+    ## 1         1             rt             rt  NOUN    N
+    ## 2         2      hjknaiset      hjknainen   ADJ    A
+    ## 3         3        tiedote        tiedote  NOUN    N
+    ## 4         4            hjk            hjk SCONJ    C
+    ## 5         5              n              n  NOUN    N
+    ## 6         6        naisten         nainen  NOUN    N
+    ## 7         7 liigajoukkueen  liiga#joukkue  NOUN    N
+    ## 8         8  päävalmentaja pää#valmentaja  NOUN    N
+    ## 9         9        vaihtuu        vaihtua  VERB    V
+    ## 10       10         kauden          kausi  NOUN    N
     ##                                                              feats
     ## 1                                             Case=Nom|Number=Plur
-    ## 2  Mood=Ind|Number=Sing|Person=3|Tense=Past|VerbForm=Fin|Voice=Act
-    ## 3                           Case=Nom|Derivation=Lainen|Number=Plur
-    ## 4                                             Case=Nom|Number=Plur
-    ## 5         Number=Plur|Person=3|Polarity=Neg|VerbForm=Fin|Voice=Act
-    ## 6                 Connegative=Yes|Mood=Ind|Tense=Pres|VerbForm=Fin
+    ## 2                  Case=Nom|Degree=Pos|Derivation=Inen|Number=Plur
+    ## 3                                             Case=Nom|Number=Sing
+    ## 4                                                       Style=Coll
+    ## 5                                    Case=Gen|Number=Sing|Typo=Yes
+    ## 6                                             Case=Gen|Number=Plur
     ## 7                                             Case=Gen|Number=Sing
-    ## 8                                             Case=Nom|Number=Sing
-    ## 9                                             Case=Par|Number=Sing
-    ## 10                                                            <NA>
-    ##    head_token_id   dep_rel deps misc topic_level_id
-    ## 1              2     nsubj <NA> <NA>           1009
-    ## 2              0      root <NA> <NA>           1009
-    ## 3              2       obj <NA> <NA>           1009
-    ## 4              8 nsubj:cop <NA> <NA>           1009
-    ## 5              8       aux <NA> <NA>           1009
-    ## 6              8       cop <NA> <NA>           1009
-    ## 7              8 nmod:poss <NA> <NA>           1009
-    ## 8             11      conj <NA> <NA>           1009
-    ## 9              8      nmod <NA> <NA>           1009
-    ## 10            11        cc <NA> <NA>           1009
+    ## 8                               Case=Nom|Derivation=Ja|Number=Sing
+    ## 9  Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act
+    ## 10                                            Case=Gen|Number=Sing
+    ##    head_token_id     dep_rel deps misc topic_level_id
+    ## 1              3   nsubj:cop <NA> <NA>           1011
+    ## 2              3        amod <NA> <NA>           1011
+    ## 3             12 compound:nn <NA> <NA>           1011
+    ## 4              9        mark <NA> <NA>           1011
+    ## 5              6   nmod:poss <NA> <NA>           1011
+    ## 6              7   nmod:poss <NA> <NA>           1011
+    ## 7              8   nmod:poss <NA> <NA>           1011
+    ## 8              9       nsubj <NA> <NA>           1011
+    ## 9              3       advcl <NA> <NA>           1011
+    ## 10             9         obl <NA> <NA>           1011
 
 ``` r
 ## Get a data.frame with 1 row per id/lemma
@@ -388,13 +388,13 @@ dtf <- document_term_frequencies(dtf, document = "topic_level_id", term = "lemma
 head(dtf)
 ```
 
-    ##    doc_id               term freq
-    ## 1:   1009                 ri    1
-    ## 2:   1009         kamybottaa    1
-    ## 3:   1009 äärioikeistolainen    1
-    ## 4:   1009             nainen    1
-    ## 5:   1009            penaali    1
-    ## 6:   1009         terävämpiä    1
+    ##    doc_id          term freq
+    ## 1:   1011            rt    1
+    ## 2:   1011     hjknainen    1
+    ## 3:   1011       tiedote    1
+    ## 4:   1011             n    1
+    ## 5:   1011        nainen    1
+    ## 6:   1011 liiga#joukkue    1
 
 ``` r
 mostusedwords <- classifythis_lemma %>% filter(upos %in% c("VERB", "ADJ")) %>% #c("NOUN", "VERB", "ADJ")
@@ -406,20 +406,19 @@ mostusedwords <- classifythis_lemma %>% filter(upos %in% c("VERB", "ADJ")) %>% #
 mostusedwords
 ```
 
-    ## # A tibble: 11 x 2
-    ##    lemma      n
-    ##    <chr>  <int>
-    ##  1 c        259
-    ##  2 https    133
-    ##  3 tehdä     67
-    ##  4 co        51
-    ##  5 saada     51
-    ##  6 hyvä      44
-    ##  7 haluta    42
-    ##  8 inen      32
-    ##  9 puhua     32
-    ## 10 kärsiä    31
-    ## 11 tärkeä    31
+    ## # A tibble: 10 x 2
+    ##    lemma         n
+    ##    <chr>     <int>
+    ##  1 c           236
+    ##  2 https       136
+    ##  3 saada       117
+    ##  4 hyvä         62
+    ##  5 co           61
+    ##  6 pitää        58
+    ##  7 nuori        57
+    ##  8 tulla        42
+    ##  9 näyttää      36
+    ## 10 puolustaa    35
 
 ## Wordclouds and other visualisation
 
