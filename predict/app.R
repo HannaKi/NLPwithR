@@ -114,6 +114,24 @@ ui <- tagList(
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
+    make_prediction_toxic<- function(x) {
+        prediction <- predict(model_toxic, x, k = 5) #type = "labels"
+        return(prediction)}
+    
+    make_prediction_toxic2<- function(x) {
+        prediction <- predict(model_toxic, x, type = "labels") #
+        return(prediction)}
+    
+    # make_prediction_en <- function(x) {
+    #   prediction <- predict(model_en, x, type = "labels")
+    #   return(prediction)}
+    
+    make_prediction_nl <- function(x) {
+        prediction <- predict(model, x,  k = 3)
+        return(prediction)}
+    
+    
+    
     # text output for the first page
     output$text_toxic <- renderText({
         input$user_text_toxic
@@ -123,8 +141,7 @@ server <- function(input, output) {
     ##toxicity
     
     output$view_table_toxic <- renderTable({
-        make_prediction_en(input$user_text_toxic) %>%
-            top_n(5)
+        make_prediction_toxic2(input$user_text_toxic)
     },hover=TRUE)
     # text output for the first page
     output$text_toxic <- renderText({
