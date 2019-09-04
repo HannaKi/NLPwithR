@@ -275,3 +275,9 @@ book_words %>%
   coord_flip()
 ```
 
+## Other resources
+
+* [Funy letters](https://www.r-bloggers.com/how-to-do-tamil-text-analysis-nlp-in-r/)
+* [DataCamp 1](https://www.datacamp.com/community/tutorials/ML-NLP-lyric-analysis)
+* [DataCamp 2](https://www.datacamp.com/community/tutorials/R-nlp-machine-learning)
+

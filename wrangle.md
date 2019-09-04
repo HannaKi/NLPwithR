@@ -242,20 +242,20 @@ tidy_tweets %>%
   count(word, sort = TRUE) 
 ```
 
-    ## # A tibble: 4,898 x 2
+    ## # A tibble: 4,688 x 2
     ##    word        n
     ##    <chr>   <int>
-    ##  1 naiset    679
-    ##  2 t         580
-    ##  3 https     575
-    ##  4 co        557
-    ##  5 rt        358
-    ##  6 suomen     86
-    ##  7 miehet     81
-    ##  8 saa        77
-    ##  9 p          51
-    ## 10 naisten    47
-    ## # … with 4,888 more rows
+    ##  1 naiset    690
+    ##  2 t         546
+    ##  3 https     543
+    ##  4 co        528
+    ##  5 rt        375
+    ##  6 n         130
+    ##  7 miehet    105
+    ##  8 naisten    59
+    ##  9 suomen     51
+    ## 10 j          50
+    ## # … with 4,678 more rows
 
 And filter out more
 
@@ -285,20 +285,20 @@ tidy_tweets_stemmed <-
 tidy_tweets_stemmed
 ```
 
-    ## # A tibble: 4,891 x 4
-    ##    word             n word_stemmed1 word_stemmed2
-    ##    <chr>        <int> <chr>         <chr>        
-    ##  1 suomen          86 suome         suome        
-    ##  2 miehet          81 miehe         miehe        
-    ##  3 saa             77 saa           saa          
-    ##  4 p               51 p             p            
-    ##  5 naisten         47 naist         naist        
-    ##  6 lapset          35 laps          laps         
-    ##  7 juho            34 juho          juho         
-    ##  8 koomikkokivi    33 koomikkokiv   koomikkokiv  
-    ##  9 em              32 em            em           
-    ## 10 päällä          32 pääl          pääl         
-    ## # … with 4,881 more rows
+    ## # A tibble: 4,681 x 4
+    ##    word         n word_stemmed1 word_stemmed2
+    ##    <chr>    <int> <chr>         <chr>        
+    ##  1 miehet     105 miehe         miehe        
+    ##  2 naisten     59 naist         naist        
+    ##  3 suomen      51 suome         suome        
+    ##  4 j           50 j             j            
+    ##  5 al          45 al            al           
+    ##  6 holin       44 hol           hol          
+    ##  7 suomeen     44 suome         suome        
+    ##  8 herrat      42 her           her          
+    ##  9 minna       41 min           min          
+    ## 10 leirillä    40 leir          leir         
+    ## # … with 4,671 more rows
 
 And way better package is UDPIPE. Also little bit different take on the
 process
@@ -326,60 +326,60 @@ classifythis_lemma %>% head(10)
 ```
 
     ##                 doc_id paragraph_id sentence_id
-    ## 1  1166691681367990272            1           1
-    ## 2  1166691681367990272            1           1
-    ## 3  1166691681367990272            1           1
-    ## 4  1166691681367990272            1           1
-    ## 5  1166691681367990272            1           1
-    ## 6  1166691681367990272            1           1
-    ## 7  1166691681367990272            1           1
-    ## 8  1166691681367990272            1           1
-    ## 9  1166691681367990272            1           1
-    ## 10 1166691681367990272            1           1
-    ##                                                                                                                              sentence
-    ## 1  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 2  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 3  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 4  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 5  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 6  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 7  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 8  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 9  rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ## 10 rt hjknaiset tiedote hjk n naisten liigajoukkueen päävalmentaja vaihtuu kauden jälkeen https t co ovfpiivos hjk naistenliiga onvai
-    ##    token_id          token          lemma  upos xpos
-    ## 1         1             rt             rt  NOUN    N
-    ## 2         2      hjknaiset      hjknainen   ADJ    A
-    ## 3         3        tiedote        tiedote  NOUN    N
-    ## 4         4            hjk            hjk SCONJ    C
-    ## 5         5              n              n  NOUN    N
-    ## 6         6        naisten         nainen  NOUN    N
-    ## 7         7 liigajoukkueen  liiga#joukkue  NOUN    N
-    ## 8         8  päävalmentaja pää#valmentaja  NOUN    N
-    ## 9         9        vaihtuu        vaihtua  VERB    V
-    ## 10       10         kauden          kausi  NOUN    N
+    ## 1  1169244615712694275            1           1
+    ## 2  1169244615712694275            1           1
+    ## 3  1169244615712694275            1           1
+    ## 4  1169244615712694275            1           1
+    ## 5  1169244615712694275            1           1
+    ## 6  1169244615712694275            1           1
+    ## 7  1169244615712694275            1           1
+    ## 8  1169244615712694275            1           1
+    ## 9  1169244615712694275            1           1
+    ## 10 1169244615712694275            1           1
+    ##                                                                                                                                   sentence
+    ## 1  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 2  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 3  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 4  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 5  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 6  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 7  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 8  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 9  vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ## 10 vihervassurit rakastavat oikeuslaitoksia niin kauan kuin omat miehet ja naiset ovat siellä päättämässä tuomioista https t co kounupxk c
+    ##    token_id           token        lemma  upos xpos
+    ## 1         1   vihervassurit vihervassuri  NOUN    N
+    ## 2         2      rakastavat     rakastaa  VERB    V
+    ## 3         3 oikeuslaitoksia oikeuslaitos  NOUN    N
+    ## 4         4            niin         niin   ADV  Adv
+    ## 5         5           kauan        kauan   ADV  Adv
+    ## 6         6            kuin         kuin SCONJ    C
+    ## 7         7            omat          oma   ADJ    A
+    ## 8         8          miehet         mies  NOUN    N
+    ## 9         9              ja           ja CCONJ    C
+    ## 10       10          naiset       nainen  NOUN    N
     ##                                                              feats
     ## 1                                             Case=Nom|Number=Plur
-    ## 2                  Case=Nom|Degree=Pos|Derivation=Inen|Number=Plur
-    ## 3                                             Case=Nom|Number=Sing
-    ## 4                                                       Style=Coll
-    ## 5                                    Case=Gen|Number=Sing|Typo=Yes
-    ## 6                                             Case=Gen|Number=Plur
-    ## 7                                             Case=Gen|Number=Sing
-    ## 8                               Case=Nom|Derivation=Ja|Number=Sing
-    ## 9  Mood=Ind|Number=Sing|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act
-    ## 10                                            Case=Gen|Number=Sing
-    ##    head_token_id     dep_rel deps misc topic_level_id
-    ## 1              3   nsubj:cop <NA> <NA>           1011
-    ## 2              3        amod <NA> <NA>           1011
-    ## 3             12 compound:nn <NA> <NA>           1011
-    ## 4              9        mark <NA> <NA>           1011
-    ## 5              6   nmod:poss <NA> <NA>           1011
-    ## 6              7   nmod:poss <NA> <NA>           1011
-    ## 7              8   nmod:poss <NA> <NA>           1011
-    ## 8              9       nsubj <NA> <NA>           1011
-    ## 9              3       advcl <NA> <NA>           1011
-    ## 10             9         obl <NA> <NA>           1011
+    ## 2  Mood=Ind|Number=Plur|Person=3|Tense=Pres|VerbForm=Fin|Voice=Act
+    ## 3                                             Case=Par|Number=Plur
+    ## 4                                                             <NA>
+    ## 5                                                             <NA>
+    ## 6                                                             <NA>
+    ## 7                                  Case=Nom|Degree=Pos|Number=Plur
+    ## 8                                             Case=Nom|Number=Plur
+    ## 9                                                             <NA>
+    ## 10                                            Case=Nom|Number=Plur
+    ##    head_token_id dep_rel deps misc topic_level_id
+    ## 1              2   nsubj <NA> <NA>           1013
+    ## 2              0    root <NA> <NA>           1013
+    ## 3              2     obj <NA> <NA>           1013
+    ## 4              5  advmod <NA> <NA>           1013
+    ## 5              2  advmod <NA> <NA>           1013
+    ## 6              8    mark <NA> <NA>           1013
+    ## 7              8    amod <NA> <NA>           1013
+    ## 8              5   advcl <NA> <NA>           1013
+    ## 9             13      cc <NA> <NA>           1013
+    ## 10            13   nsubj <NA> <NA>           1013
 
 ``` r
 ## Get a data.frame with 1 row per id/lemma
@@ -388,13 +388,13 @@ dtf <- document_term_frequencies(dtf, document = "topic_level_id", term = "lemma
 head(dtf)
 ```
 
-    ##    doc_id          term freq
-    ## 1:   1011            rt    1
-    ## 2:   1011     hjknainen    1
-    ## 3:   1011       tiedote    1
-    ## 4:   1011             n    1
-    ## 5:   1011        nainen    1
-    ## 6:   1011 liiga#joukkue    1
+    ##    doc_id         term freq
+    ## 1:   1013 vihervassuri    1
+    ## 2:   1013     rakastaa    1
+    ## 3:   1013 oikeuslaitos    1
+    ## 4:   1013          oma    1
+    ## 5:   1013         mies    1
+    ## 6:   1013       nainen    1
 
 ``` r
 mostusedwords <- classifythis_lemma %>% filter(upos %in% c("VERB", "ADJ")) %>% #c("NOUN", "VERB", "ADJ")
@@ -407,18 +407,18 @@ mostusedwords
 ```
 
     ## # A tibble: 10 x 2
-    ##    lemma         n
-    ##    <chr>     <int>
-    ##  1 c           236
-    ##  2 https       136
-    ##  3 saada       117
-    ##  4 hyvä         62
-    ##  5 co           61
-    ##  6 pitää        58
-    ##  7 nuori        57
-    ##  8 tulla        42
-    ##  9 näyttää      36
-    ## 10 puolustaa    35
+    ##    lemma           n
+    ##    <chr>       <int>
+    ##  1 c             265
+    ##  2 https         113
+    ##  3 hyvä           83
+    ##  4 mennä          59
+    ##  5 tulla          59
+    ##  6 kertoa         55
+    ##  7 saada          53
+    ##  8 tehdä          52
+    ##  9 co             51
+    ## 10 suomalainen    49
 
 ## Wordclouds and other visualisation
 
@@ -523,3 +523,10 @@ book_words %>%
     ## Selecting by tf_idf
 
 ![](wrangle_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+## Other resources
+
+  - [Funy
+    letters](https://www.r-bloggers.com/how-to-do-tamil-text-analysis-nlp-in-r/)
+  - [DataCamp 1](https://www.datacamp.com/community/tutorials/ML-NLP-lyric-analysis)
+  - [DataCamp 2](https://www.datacamp.com/community/tutorials/R-nlp-machine-learning)
