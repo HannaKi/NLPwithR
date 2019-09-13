@@ -1,16 +1,21 @@
 #https://cloudyr.github.io/googleComputeEngineR/index.html
+#install.packages("googleComputeEngineR")
 
+## saved the json in Renviron
 readRenviron('.Renviron') 
 library(googleComputeEngineR)
 
-vm_nlp <- gce_vm("virtualmachine", 
-                  predefined_type = "n1-standard-1", 
-                  template = "rstudio", 
-                  username = "eicaa", 
-                  password = Sys.getenv("PASSWORDCLOUD") 
-                  #,dynamic_image = "gcr.io/gcer-public/persistent-rstudio"
-                 )
+#gce_list_machinetype()
 
-gce_vm_stop(vm_nlp)
+## see gce_list_machinetype() for options of predefined_type
+vm <- gce_vm(template = "rstudio-shiny",
+             name = "rstudio-team",
+             username = "mark", 
+             password = "mark1234",
+             predefined_type = "n1-standard-1")
 
-gce_vm_start(vm_nlp)
+##remember to stop the instance
+gce_vm_stop(vm)
+
+# in theory you should be able to start the instance again with this
+gce_vm_start(vm)
